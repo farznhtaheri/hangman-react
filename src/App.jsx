@@ -1,8 +1,8 @@
 import { languages } from "./languages"
 import { useEffect, useState } from "react"
 import clsx from 'clsx';
+import confetti from 'canvas-confetti'
 import { getFarewellText, getRandomWord } from './utils'
-import confetti from "https://cdn.skypack.dev/canvas-confetti"
 
 export default function AssemblyEndgame() {
 
@@ -35,9 +35,18 @@ export default function AssemblyEndgame() {
     fetchWord();
   }, [])
 
-  if (isGameWon) {
-    confetti();
-  }
+  useEffect(() => {
+    if (!isGameWon) {
+      return;
+    }
+
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      disableForReducedMotion: true
+    });
+  }, [isGameWon])
   
   // displaying the keyboard
   const key = alphabet.split("").map(letter => 
@@ -102,7 +111,7 @@ export default function AssemblyEndgame() {
       ))
       .map((language, index) => {
         return index == 0 ? stringOfLost += language.name : stringOfLost += " & " + language.name});
-      return <p>"{getFarewellText(stringOfLost)}" 😢</p>;
+      return <p>&quot;{getFarewellText(stringOfLost)}&quot; 😢</p>;
     }
     return (
       <>
